@@ -1,0 +1,14 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+
+{% comment %} <a href="/logout">Logout</a> {% endcomment %}
+
+{% if user.is_superuser %}
+    {% include 'includes/is_superuser_home.html' %}
+{% elif user.is_admin %}
+    {% include 'includes/is_admin_home.html' %}
+{% elif user.is_user %}
+    {% include 'includes/is_user_home.html' %}
+{% endif %}
+
+{% endblock content %}
