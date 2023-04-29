@@ -4,11 +4,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView, CreateView
 
 from accounts.forms import SectionForm
+from accounts.permissions import (RedirectHomeIfNotAdminMixin, )
 
 # Create your views here.
 
 
-class Section(LoginRequiredMixin, CreateView):
+class Section(LoginRequiredMixin, RedirectHomeIfNotAdminMixin, CreateView):
     template_name = "apps/add_section.html"
     form_class = SectionForm
     success_url = reverse_lazy('home:home') #change this later
@@ -24,22 +25,4 @@ class Section(LoginRequiredMixin, CreateView):
             section.organization = self.request.user.organizationunit
             section.save()
             print('Section created!!!') 
-            # try:
-            #     section = form.save(commit=False)
-            #     section.organization = self.request.user.organizationunit
-        #         section.save()
-        #         print('Section created!!!') 
-        #     except IntegrityError as e:
-        #         # Catch the IntegrityError exception and handle it appropriately
-        #         if 'unique constraint' in str(e).lower():
-        #             print("Error: Duplicate values violates unique constraint!")
-        #             return super().form_valid(form)
-
-        #         else:
-        #             print("Error: " + str(e))
-        #     except Exception as e:
-        #         # Catch any other exceptions that may occur
-        #         print("Error: " + str(e))
-            # print(self.request.user.organizationunit)
-            # print(dir(self.request.user))
         return super().form_valid(form)

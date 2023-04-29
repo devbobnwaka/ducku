@@ -104,6 +104,4 @@ class OrganizationMemberAdmin(admin.ModelAdmin):
 
 admin.site.register(OrganizationMember, OrganizationMemberAdmin)
 
-
-
 admin.site.register(OrganizationGroup)

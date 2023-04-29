@@ -1,16 +1,18 @@
 <nav>
     <a href="{% url 'home:index' %}">Home</a>
     <a href="{% url 'home:about' %}">About</a>
-
+    
+    {% if user.is_admin and not user.is_superuser %}
+    | <a href="{% url 'accounts:register_member' %}">Register Member</a> |
+    | <a href="{% url 'apps:section' %}">Add Section</a> |
+    {% endif %}
+    
     {% if not user.is_authenticated %}
     <a href=" {% url 'accounts:register' %}">Register</a>
     <a href="{% url 'accounts:login' %}">Login</a>
+    {% else %}
+    <a href="{% url 'accounts:logout' %}">Logout</a>
     {% endif %}
     
-    {% if user.is_admin %}
-    | <a href="">Register Member</a> |
-    | <a href="{% url 'apps:section' %}">Add Section</a> |
-    | <a href="{% url 'accounts:logout' %}">Logout</a>
-    {% endif %}
-
+    
 </nav>
