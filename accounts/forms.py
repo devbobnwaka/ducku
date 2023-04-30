@@ -45,17 +45,46 @@ class RegisterMemberUserForm(UserCreationForm):
     password2  = forms.CharField(widget=forms.PasswordInput())
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
+        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2',)
 
-class RegisterSectionForm(forms.Form):
-    section = forms.ModelChoiceField(queryset=Section.objects.all())
+class RegisterSectionForm(forms.ModelForm):
+    class Meta:
+        model = OrganizationMember
+        fields = ('image', 'section')
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if self.user:
+            self.fields['section'].queryset = Section.objects.filter(organization=self.user.organizationunit)
+            self.fields['section'].empty_label = 'Select user section'
+
+    def save(self, user, commit=True):
+        organization_member = super().save(commit=False)
+        organization_member.user = user
+        organization_member.organization = user.organizationunit
+        if commit:
+            organization_member.save()
+        return organization_member
 
 
+# class RegisterSectionForm(forms.Form):
+#     section = forms.ModelChoiceField(queryset=Section.objects.none(),  empty_label='Select user section')
 
-#     def save_profile(self, commit=True):
-#         organization_unit = OrganizationUnit()
-#         organization_unit.name = self.cleaned_data.get('organization_name')
+#     def __init__(self, *args, **kwargs):
+#         self.user = kwargs.pop('user', None)
+#         super().__init__(*args, **kwargs)
+#         if self.user:
+#             self.fields['section'].queryset = Section.objects.filter(organization=self.user.organizationunit)
+
+#     def save(self, commit=True):
+#         organization_member = OrganizationMember()
+#         organization_member.user = self.user
+#         organization_member.organization = self.user.organizationunit
 #         if commit:
-#             organization_unit.save()
-#         return organization_unit
+#             organization_member.save()
+#         return organization_member
+
+
+
 

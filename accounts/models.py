@@ -107,7 +107,7 @@ class OrganizationMember(models.Model):
     image = models.ImageField(upload_to="profile_pic")
 
     def __str__(self) -> str:
-        return self.user.email
+        return self.user.organizationunit.name
 
 
 

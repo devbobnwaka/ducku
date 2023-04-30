@@ -4,7 +4,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.edit import FormView, CreateView
 from django.urls import reverse_lazy
 from .forms import (UserForm, RegisterMemberUserForm, RegisterSectionForm)
-from .models import (OrganizationUnit,)
+from .models import (OrganizationUnit, OrganizationMember)
 from .permissions import (RedirectHomeIfLogInMixin, RedirectHomeIfNotAdminMixin)
 
 # Create your views here.
@@ -26,22 +26,31 @@ class Register(RedirectHomeIfLogInMixin, FormView):
 class RegisterMember(LoginRequiredMixin, RedirectHomeIfNotAdminMixin, FormView):
     template_name = "accounts/register_member.html"
     form_class = RegisterMemberUserForm
-    success_url = reverse_lazy('accounts:login') #change this later
+    success_url = reverse_lazy('accounts:register_member') #change this later
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['register_section_form'] = RegisterSectionForm()
+        context['register_section_form'] = RegisterSectionForm(user=self.request.user)
         return context
 
     def form_valid(self, form):
-        if form.is_valid():
+        register_section_form = RegisterSectionForm(self.request.POST, self.request.FILES)
+        if all([form.is_valid(), register_section_form.is_valid()]):
+        # if register_section_form.is_valid():
             user = form.save(commit=False)
             user.is_user = True
-            # user.save()
-        return super().form_valid(form)
+            user.save()
+            organization_member = register_section_form.save(user=self.request.user)
+            # return redirect(self.success_url)
+            return super().form_valid(form)
+        else:
+            return super().form_invalid(form)
+
+    def form_invalid(self, form):
+        return render(self.request, self.template_name, {'form': form, 'register_section_form': RegisterSectionForm(self.request.POST, self.request.FILES)})
 
 
-class Login(LoginView):
+class Login(RedirectHomeIfLogInMixin, LoginView):
     template_name = "accounts/login.html"
 
 
