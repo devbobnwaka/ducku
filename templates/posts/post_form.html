@@ -2,12 +2,13 @@
 
 {% block content %}
 
-<h3>Register Memeber</h3>
+<h3>Create Post</h3>
 
 <form method='POST' action='' enctype="multipart/form-data">
     {% csrf_token %}
+    {{ form.media }}
     {{ form.as_p}}
-    {{register_section_form.as_p}}
-<button type='submit'>Register</button>
+<button type='submit'>Save as Draft</button>
+<button >Publish</button>
 </form>
 {% endblock content %}

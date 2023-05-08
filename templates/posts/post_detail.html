@@ -1,0 +1,14 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+
+<h3>Detail Post</h3>
+<h1>{{ post.title }}</h1>
+<p>{{ post.body | safe }}</p>
+
+{% if post.user == request.user %}
+    <a href="{{ post.get_absolute_edit_url }}">Edit</a>
+    <a href="{{ post.get_absolute_delete_url }}">Delete</a>
+{% endif %}
+
+{% endblock content %}

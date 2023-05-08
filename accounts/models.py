@@ -1,4 +1,5 @@
 import uuid
+from django.utils import timezone
 from django.db import models
 
 from django.contrib.auth.models import (
@@ -70,8 +71,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class OrganizationUnit(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    unique_id = models.UUIDField(unique=True, editable=False, default=uuid.uuid4())
+    unique_id = models.UUIDField(unique=True, editable=False)
     name = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True,)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -95,19 +98,27 @@ class OrganizationUnit(models.Model):
 class Section(models.Model):
     organization = models.ForeignKey(OrganizationUnit, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True,)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         return self.name
 
 
 class OrganizationMember(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    member = models.OneToOneField(User, on_delete=models.CASCADE, related_name='member')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='creator')
     organization = models.ForeignKey(OrganizationUnit, on_delete=models.CASCADE)
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="profile_pic")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
-        return self.user.organizationunit.name
+        return self.member.username
+
+    def get_organization_unit(self):
+        return self.organization
 
 
 

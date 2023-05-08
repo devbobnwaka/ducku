@@ -40,8 +40,9 @@ class RegisterMember(LoginRequiredMixin, RedirectHomeIfNotAdminMixin, FormView):
             user = form.save(commit=False)
             user.is_user = True
             user.save()
-            organization_member = register_section_form.save(user=self.request.user)
-            # return redirect(self.success_url)
+            organization_member = register_section_form.save(commit=False, user=self.request.user)
+            organization_member.member = user
+            organization_member.save()
             return super().form_valid(form)
         else:
             return super().form_invalid(form)

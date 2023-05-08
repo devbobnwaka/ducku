@@ -1,14 +1,11 @@
 from django.urls import reverse_lazy
-from django.db import IntegrityError
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import FormView, CreateView
+from django.views.generic.edit import CreateView
 
 from accounts.forms import SectionForm
 from accounts.permissions import (RedirectHomeIfNotAdminMixin, )
 
 # Create your views here.
-
-
 class Section(LoginRequiredMixin, RedirectHomeIfNotAdminMixin, CreateView):
     template_name = "apps/add_section.html"
     form_class = SectionForm
@@ -26,3 +23,5 @@ class Section(LoginRequiredMixin, RedirectHomeIfNotAdminMixin, CreateView):
             section.save()
             print('Section created!!!') 
         return super().form_valid(form)
+
+

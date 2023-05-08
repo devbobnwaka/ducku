@@ -6,13 +6,19 @@
     | <a href="{% url 'accounts:register_member' %}">Register Member</a> |
     | <a href="{% url 'apps:section' %}">Add Section</a> |
     {% endif %}
+
+    {% if user.is_user and not user.is_superuser %}
+    | <a href="{% url 'post:post-create' %}">Create Article</a> |
+    | <a href="{% url 'post:user-post-list' %}">My Articles</a> |
+    | <a href="{% url 'post:post-list' %}">All Article Visible to me</a> |
+    {% endif %}
     
     {% if not user.is_authenticated %}
     <a href=" {% url 'accounts:register' %}">Register</a>
     <a href="{% url 'accounts:login' %}">Login</a>
     {% else %}
-    <a href="{% url 'accounts:logout' %}">Logout</a>
+    <a href="{% url 'accounts:logout' %}">Logout</a> ||
+    {{ user.username }}
     {% endif %}
-    
     
 </nav>

@@ -100,8 +100,12 @@ class OrganizationUnitAdmin(admin.ModelAdmin):
 admin.site.register(OrganizationUnit, OrganizationUnitAdmin)
 
 class OrganizationMemberAdmin(admin.ModelAdmin):
-    raw_id_fields = ['user', 'organization', 'section']
+    list_display = ('member',  'created_by', 'organization')
+    raw_id_fields = ['member', 'created_by', 'organization', 'section']
 
 admin.site.register(OrganizationMember, OrganizationMemberAdmin)
 
-admin.site.register(OrganizationGroup)
+class OrganizationGroupAdmin(admin.ModelAdmin):
+    list_display = ('name', 'organization')
+    
+admin.site.register(OrganizationGroup, OrganizationGroupAdmin)

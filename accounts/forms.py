@@ -61,29 +61,11 @@ class RegisterSectionForm(forms.ModelForm):
 
     def save(self, user, commit=True):
         organization_member = super().save(commit=False)
-        organization_member.user = user
+        organization_member.created_by = user
         organization_member.organization = user.organizationunit
         if commit:
             organization_member.save()
         return organization_member
-
-
-# class RegisterSectionForm(forms.Form):
-#     section = forms.ModelChoiceField(queryset=Section.objects.none(),  empty_label='Select user section')
-
-#     def __init__(self, *args, **kwargs):
-#         self.user = kwargs.pop('user', None)
-#         super().__init__(*args, **kwargs)
-#         if self.user:
-#             self.fields['section'].queryset = Section.objects.filter(organization=self.user.organizationunit)
-
-#     def save(self, commit=True):
-#         organization_member = OrganizationMember()
-#         organization_member.user = self.user
-#         organization_member.organization = self.user.organizationunit
-#         if commit:
-#             organization_member.save()
-#         return organization_member
 
 
 
