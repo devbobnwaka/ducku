@@ -2,13 +2,14 @@
 
 {% block content %}
 
-<h3>Create Post</h3>
+<h3>{{ template_header }}</h3>
 
 <form method='POST' action='' enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.media }}
     {{ form.as_p}}
-<button type='submit'>Save as Draft</button>
-<button >Publish</button>
+<button type='submit' name="draft">Save as Draft</button>
+<button type='submit' name="publish">Publish</button>
 </form>
+{% comment %} <form action="{{ request.META.HTTP_REFERER }}" method="post" class=" m-1" > {% endcomment %}
 {% endblock content %}
