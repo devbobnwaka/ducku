@@ -73,6 +73,7 @@ class PostUpdateView(LoginRequiredMixin, RedirectHomeIfNotUserMixin, UserIsOwner
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        # print(self.request.POST)
         if 'draft' in self.request.POST:
             return self.draft(form)
         elif 'publish' in self.request.POST:
